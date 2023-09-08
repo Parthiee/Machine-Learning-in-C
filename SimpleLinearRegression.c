@@ -16,14 +16,14 @@ double data[][2] ={
 {10.00, 21.00},
 };
 
-int size = sizeof(data)/sizeof(data[0]);
+#define traincount 10000
+#define size sizeof(data)/sizeof(data[0])
 
-double getRandom()
+double getRandomf()
 {
-  time_t t;
   srand(time(0));
 
-  return (double) rand() / RAND_MAX * 10.00f;
+  return (double) rand() / RAND_MAX ;
 }
 
 double getMeanSquaredError(double weight, double bias)
@@ -62,18 +62,12 @@ void optimizeWeight(double *weight, double *bias, int learnCount, double delta, 
 int main()
 {
   // y = m*x + c;
-  double weight = getRandom();
-  double bias = getRandom();
+  double weight = getRandomf();
+  double bias = getRandomf();
   printf("Initial weight: %lf, Initial bias: %lf\n",weight,bias);
   double delta = 0.0001;
   double learningRate = 0.001;
 
-  // for(int i=0; i<size; i++)
-  // {
-  //   double y_hat = weight*data[i][0];
-  //   double y = data[i][1];
-  //   printf("\n%lf  %lf \n", y_hat, y);
-  // }
   
   printf("Error : %lf\n",getMeanSquaredError(weight,bias));
   optimizeWeight(&weight,&bias,10000,delta,learningRate);
@@ -81,7 +75,7 @@ int main()
   printf("Optimized weight:%lf, Optimized bias: %lf\n",weight,bias);
   printf("Error : %lf\n",getMeanSquaredError(weight,bias));
 
-    for(int i=0; i<size; i++)
+  for(int i=0; i<size; i++)
   {
     double y_hat = weight*data[i][0] + bias;
     double y = data[i][1];
