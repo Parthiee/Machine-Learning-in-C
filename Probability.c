@@ -41,7 +41,9 @@ double randomDouble()
 
 double sigmoid(double x)
 {
-    return (double) 1/(1+exp(-x));
+    double lambda = 1;
+
+    return (double) 1/(1+exp(-x*lambda));
 }
 
 double meanSquareError(double w, double bias)
