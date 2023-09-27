@@ -2,8 +2,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include <math.h>
+
 #define size 4
-#define TRAINING_COUNT 100
+#define TRAINING_COUNT 10000000
 
 typedef double dataset[3];
 typedef struct 
@@ -48,7 +49,15 @@ dataset nand_train[] = {
 
 };
 
-dataset *data = nand_train;
+dataset xor_train[] = {
+    {0,0,0},
+    {0,1,1},
+    {1,0,1},
+    {1,1,0}
+
+};
+
+dataset *data = xor_train;
 
 double sigmoid(double x)
 {
@@ -68,8 +77,8 @@ double forward(xor model, double x1, double x2)
 double getRandom()
 {
  
-  srand(time(NULL));
-  return (double) rand() / RAND_MAX * 10.00f;
+  srand(time(0));
+  return (double) rand() / RAND_MAX ;
 }
 
 double getMeanSquaredError(xor model)
@@ -121,75 +130,74 @@ xor gradientDescent(xor *model, double delta, double learningRate)
 
   for(int i=0; i<TRAINING_COUNT; i++)
   {
-//     error_before = getMeanSquaredError(*model);
-//     temp = model->or_w1;
-//     model->or_w1 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->or_w1 = temp;
-//     diff.d_or_w1 = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    error_before = getMeanSquaredError(*model);
+    temp = model->or_w1;
+    model->or_w1 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->or_w1 = temp;
+    diff.d_or_w1 = (error_after-error_before)/delta;
+ 
 
-//     temp = model->or_w2;
-//     model->or_w2 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->or_w2 = temp;
-//     diff.d_or_w2 = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
-
-//     temp = model->or_bias;
-//     model->or_bias += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->or_bias = temp;
-//     diff.d_or_bias = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    temp = model->or_w2;
+    model->or_w2 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->or_w2 = temp;
+    diff.d_or_w2 = (error_after-error_before)/delta;
 
 
-//     temp = model->nand_w1;
-//     model->nand_w1 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->nand_w1 = temp;
-//     diff.d_nand_w1 = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    temp = model->or_bias;
+    model->or_bias += delta;
+    error_after = getMeanSquaredError(*model);
+    model->or_bias = temp;
+    diff.d_or_bias = (error_after-error_before)/delta;
 
 
-//     temp = model->nand_w2;
-//     model->nand_w2 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->nand_w2 = temp;
-//     diff.d_nand_w2 = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+
+    temp = model->nand_w1;
+    model->nand_w1 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->nand_w1 = temp;
+    diff.d_nand_w1 = (error_after-error_before)/delta;
 
 
-//     temp = model->nand_bias;
-//     model->nand_bias += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->nand_bias = temp;
-//     diff.d_nand_bias = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
 
-//     temp = model->and_w1;
-//     model->and_w1 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->and_w1 = temp;
-//     diff.d_and_w1 = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    temp = model->nand_w2;
+    model->nand_w2 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->nand_w2 = temp;
+    diff.d_nand_w2 = (error_after-error_before)/delta;
+ 
 
-//     temp = model->and_w2;
-//     model->and_w2 += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->and_w2 = temp;
-//     diff.d_and_w2 = (error_before - error_after)/delta;
-// printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    temp = model->nand_bias;
+    model->nand_bias += delta;
+    error_after = getMeanSquaredError(*model);
+    model->nand_bias = temp;
+    diff.d_nand_bias = (error_after-error_before)/delta;
+  
 
-//     temp = model->and_bias;
-//     model->and_bias += delta;
-//     error_after = getMeanSquaredError(*model);
-//     model->and_bias = temp;
-//     diff.d_and_bias = (error_before - error_after)/delta;
-//     printf("\n<<<%lf , %lf>>>\n",error_after,error_after);
+    temp = model->and_w1;
+    model->and_w1 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->and_w1 = temp;
+    diff.d_and_w1 = (error_after-error_before)/delta;
+  
+
+    temp = model->and_w2;
+    model->and_w2 += delta;
+    error_after = getMeanSquaredError(*model);
+    model->and_w2 = temp;
+    diff.d_and_w2 = (error_after-error_before)/delta;
+
+
+    temp = model->and_bias;
+    model->and_bias += delta;
+    error_after = getMeanSquaredError(*model);
+    model->and_bias = temp;
+    diff.d_and_bias = (error_after-error_before)/delta;
+
 
     calculateDifference(model, &diff, learningRate);
-    printParameters(model);
+    //printParameters(model);
 
     
 
@@ -197,10 +205,22 @@ xor gradientDescent(xor *model, double delta, double learningRate)
   return *model;
 }
 
+
+void printTable(xor *model)
+{
+    for(int i=0; i<size; i++)
+    {
+      double yhat = forward(*model, data[i][0], data[i][1]);
+      printf("\n%lf  %lf\n",yhat, data[i][2]);
+    }
+
+
+}
+
 int main()
 {
   double delta = 0.001;
-  double learningRate = 0.001;
+  double learningRate = 0.01; // Num of parameters is proportional to learning rate
 
   model.and_bias=getRandom();
   model.and_w1=getRandom();
@@ -213,15 +233,15 @@ int main()
   model.or_bias=getRandom();
   model.or_w1=getRandom();
   model.or_w2=getRandom();
-  printParameters(&model);
-  printf("sfedff");
+  //printParameters(&model);
 
 
   xor t = gradientDescent(&model,delta, learningRate);
 
   printf("------------------------------------------");
-  printParameters(&t);
-
+  //printParameters(&t);
+  printf("------------------------------------------");
+  printTable(&model);
  
   
 
