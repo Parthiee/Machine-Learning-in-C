@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define size 4
-#define TRAINING_COUNT 10000000
+#define TRAINING_COUNT 1000000
 
 typedef double dataset[3];
 typedef struct 
@@ -15,7 +15,7 @@ typedef struct
 
 }xor;
 
-xor model;
+
 
 typedef struct {
     double d_or_w1, d_or_w2, d_or_bias;
@@ -74,11 +74,11 @@ double forward(xor model, double x1, double x2)
 }
 
 
-double getRandom()
+float getRandom()
 {
  
-  srand(time(0));
-  return (double) rand() / RAND_MAX ;
+  //srand(time(0));
+  return (float) rand() / RAND_MAX ;
 }
 
 double getMeanSquaredError(xor model)
@@ -123,7 +123,7 @@ void calculateDifference(xor *model, differentials *diff, double learningRate)
     model->and_bias -= learningRate*diff->d_and_bias;
 
 }
-xor gradientDescent(xor *model, double delta, double learningRate)
+void finiteDifference(xor *model, double delta, double learningRate)
 {
   differentials diff;
   double error_before, error_after, temp;
@@ -197,12 +197,12 @@ xor gradientDescent(xor *model, double delta, double learningRate)
 
 
     calculateDifference(model, &diff, learningRate);
-    //printParameters(model);
+    printParameters(model);
 
     
 
   }
-  return *model;
+  
 }
 
 
@@ -217,10 +217,9 @@ void printTable(xor *model)
 
 }
 
-int main()
+xor randomizeModel()
 {
-  double delta = 0.001;
-  double learningRate = 0.01; // Num of parameters is proportional to learning rate
+  xor model;
 
   model.and_bias=getRandom();
   model.and_w1=getRandom();
@@ -233,13 +232,22 @@ int main()
   model.or_bias=getRandom();
   model.or_w1=getRandom();
   model.or_w2=getRandom();
-  //printParameters(&model);
+  
+  return model;
+}
+int main()
+{
+  double delta = 1e-1;
+  double learningRate = 1e-1; // Num of parameters is proportional to learning rate
+
+  xor model = randomizeModel();
+  printParameters(&model);
 
 
-  xor t = gradientDescent(&model,delta, learningRate);
+  finiteDifference(&model,delta, learningRate);
 
   printf("------------------------------------------");
-  //printParameters(&t);
+   printParameters(&model);
   printf("------------------------------------------");
   printTable(&model);
  
