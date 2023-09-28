@@ -43,7 +43,7 @@ double getMeanSquaredError(double w1, double w2, double bias)
 
   }
   cumError /= size;
-
+ 
   return cumError;
 
 }

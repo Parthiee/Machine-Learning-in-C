@@ -15,7 +15,7 @@ double data[][2] ={
 {9.00 , 19.00},
 {10.00, 21.00},
 };
-
+ 
 #define traincount 10000
 #define size sizeof(data)/sizeof(data[0])
 
