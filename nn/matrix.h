@@ -14,22 +14,21 @@ typedef struct
 }Matrix;
 
 
-Matrix* allocateMatrix(size_t row, size_t col)
+Matrix* allocateMatrix(const size_t row, const size_t col)
 {
     srand(time(NULL));
     Matrix* matrix = (Matrix*) malloc(sizeof(Matrix));
     matrix->row = row;
     matrix->col = col;
 
-    int size = matrix->col * matrix->row;
-    matrix->stride = size/matrix->col;
+    matrix->stride = matrix->col;
     matrix->mat = (float*) malloc(sizeof(float)*col*row);
 
     return matrix;
 
 }
 
-float getElementAt(Matrix *matrix, int row, int col)
+float getElementAt(const Matrix *matrix, int row, int col)
 {
     return matrix->mat[2*row + col];
 }
@@ -39,16 +38,17 @@ void setElementAt(Matrix *matrix, int row, int col, float value)
     matrix->mat[2*row + col] = value;
 }
 
-void printMatrix(Matrix *matrix)
+void printMatrix(const Matrix *matrix)
 {
 
     for(int i = 0 ; i<matrix->stride ; i++)
     {
+        printf("[");
         for(int j=0; j<matrix->col; j++ )
         {
             printf("%f ",getElementAt(matrix,i,j));
         }
-        printf("\n");
+        printf("]\n");
     }
 }
 
@@ -64,7 +64,7 @@ void randomizeMatrix(Matrix *matrix)
     }
 }
 
-Matrix* matrixMultiply(Matrix *A, Matrix *B)
+Matrix* matrixMultiply(const Matrix *A, const Matrix *B)
 {
     float temp=0;
     assert(A->col == B->row );
@@ -84,3 +84,22 @@ Matrix* matrixMultiply(Matrix *A, Matrix *B)
     }
     return prod;
 }
+
+Matrix* transposeMatrix(Matrix *matrix)
+{
+    Matrix *temp;
+    temp = allocateMatrix(matrix->col, matrix->row);
+    
+    for(size_t i = 0 ; i < matrix->row; i++)
+    {
+        for(size_t j = 0; j < matrix->col; j++)
+        {
+            // Swap the rows and columns during transpose
+            setElementAt(temp, j, i, getElementAt(matrix, i, j));
+        }
+    }
+
+    return temp;
+}
+
+
