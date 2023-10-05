@@ -1,22 +1,38 @@
 #include <stdio.h>
-#include "matrix.h"
+#include "nn.h"
+
+
+
+dataset or_train[] = {
+    {0,0,0},
+    {0,1,1},
+    {1,0,1},
+    {1,1,1}
+
+};
+
+dataset *data = or_train;
 
 int main()
 {
-    Matrix *A, *C;
-    A = allocateMatrix(3,3);
-    C = allocateMatrix(3,3);
+    Layer l_1 = createLayer(INPUT,L1);
+    Layer l_2 = createLayer(L1,L2);
+    Layer layers[] = {l_1, l_2};
 
-    
-    // printMatrix(A);
-    // printMatrix(B);
+    forwardPropagate(layers,2, data[0]);
+    printf("\nCost is %f \n",cost(layers,2,data));
 
-   // Matrix *C =  matrixMultiply(A,B);
-    printMatrix(C);
 
-    Matrix *t = transposeMatrix(C);
+    printf("\n---------main-------\n");
+    printMatrix(l_1.W);
     printf("\n\n");
-    printMatrix(t);
-
+    printMatrix(l_2.W);
+    printf("\n\n");
+    
+    printf("\n----------------\n");
+    // Matrix* C = allocateMatrix(3,3);
+    // randomizeMatrix(C);
+    
+   
     return 0;
 }
