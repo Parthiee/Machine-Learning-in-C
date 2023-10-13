@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "nn.h"
 
-
+#define NUM_LAYERS 2
 
 dataset or_train[] = {
     {0,0,0},
@@ -17,23 +17,25 @@ int main()
 {
     Layer l_1 = createLayer(INPUT,L1);
     Layer l_2 = createLayer(L1,L2);
+    Layer l_3 = createLayer(L2,L3);
     Layer layers[] = {l_1, l_2};
 
-    forwardPropagate(layers,2, data[0]);
-    printf("\nCost is %f \n",cost(layers,2,data));
-
-
-    printf("\n---------main-------\n");
-    printMatrix(l_1.W);
-    printf("\n\n");
-    printMatrix(l_2.W);
-    printf("\n\n");
     
-    printf("\n----------------\n");
+    printf("\nCost is %f \n",cost(layers,NUM_LAYERS,data));
 
-    // backPropagate(layers,2,data);
-    // Matrix* C = allocateMatrix(3,3);
-    // randomizeMatrix(C);
+
+
+    //backPropagate(layers,NUM_LAYERS,data);
+
+calculateNumericalGradients(layers,NUM_LAYERS,data, LEARNING_RATE);
+
+     printf("\nCost is %f \n",cost(layers,NUM_LAYERS,data));
+
+     for(size_t i=0; i< SIZE_DATA; i++)
+     {
+        printf("\n%f %f\n",getElementAt(forwardPropagate(layers,NUM_LAYERS, data[i]),0,0), data[i][2]);
+     }
+     
     
 
     return 0;

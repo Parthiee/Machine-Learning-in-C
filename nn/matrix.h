@@ -138,6 +138,23 @@ Matrix* addMatrix(const Matrix* A, const Matrix* B)
     return sum;
 }
 
+Matrix* subtractMatrix(const Matrix* A, const Matrix* B)
+{
+    assert(A->col == B->col);
+    assert(A->row == B->row);
+
+    Matrix* sum = allocateMatrix(A->row, A->col);
+    for(size_t i=0; i<A->row; i++)
+    {
+        for(size_t j=0; j<A->col; j++)
+        {
+            setElementAt(sum,i,j,getElementAt(A,i,j)-getElementAt(B,i,j));
+        }
+    }
+
+    return sum;
+}
+
 float sigmoid(float x)
 {
     return (float) 1/(1+exp(-x));
@@ -177,4 +194,47 @@ Matrix* hadamardProduct(const Matrix *A, const Matrix *B)
         }
     }
     return prod;
+}
+
+void copyMatrix(Matrix* destination, const Matrix* source) {
+    assert (source->row == destination->row && source->col == destination->col);
+        // Handle the case where source and destination matrices have different dimensions.
+        // You may choose to return an error code or handle it in another way.
+  
+
+    for (size_t i = 0; i < source->row; i++) {
+        for (size_t j = 0; j < source->col; j++) {
+            float value = getElementAt(source, i, j);
+            setElementAt(destination, i, j, value);
+        }
+    }
+}
+
+Matrix* scaleMatrix(const Matrix* A, float scalar) {
+    Matrix* scaled = allocateMatrix(A->row, A->col);
+
+    for (size_t i = 0; i < A->row; i++) {
+        for (size_t j = 0; j < A->col; j++) {
+            float value = getElementAt(A, i, j) * scalar;
+            setElementAt(scaled, i, j, value);
+        }
+    }
+
+    return scaled;
+}
+
+float relu(float x) {
+    if (x > 0) {
+        return x;
+    } else {
+        return 0.0;
+    }
+}
+
+float relu_derivative(float x) {
+    if (x > 0) {
+        return 1.0;
+    } else {
+        return 0.0;
+    }
 }
