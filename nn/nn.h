@@ -11,41 +11,10 @@
 #define L1 4
 #define L2 1
 #define INPUT 2
+#define EPOCH 1000
+
 
 typedef float dataset[3];
-
-
-
-// typedef struct nn
-// {
-//    int input_size;
-//    Matrix* weights;
-
-// }Neuron;
-
-
-// Neuron createNeuron()
-// {
-//     Neuron neu;
-//     neu.input_size = INPUT_SIZE;
-//     neu.weights = allocateMatrix(INPUT_SIZE, 1);
-//     randomizeMatrix(neu.weights);
-
-//     return neu;
-
-// }
-
-// Matrix generateWeightMatrix(Neuron* layer)
-// {
-//     Matrix* W = allocateMatrix(INPUT_SIZE, LAYER_SIZE);
-//     for(size_t i=0; i<W->row; i++)
-//     {
-//             for(size_t j=0; j<W->col; j++)
-//              {
-
-//              } 
-//     } 
-// }
 
 
 typedef struct 
@@ -90,10 +59,6 @@ Matrix* forwardPropagate(Layer* layers, int numLayers, dataset ip)
         output = broadcastFunction(sigmoid,output);
         input = output;
        }
-
-        // output = matrixMultiply(l_2.W,output);
-        // output = addMatrix(output,l_2.B);
-        // output = broadcastFunction(sigmoid,output);
        return output;
     
 
@@ -114,5 +79,25 @@ float cost(Layer* layers, int numLayers, dataset* data)
   cumError /= SIZE_DATA;
 
   return cumError;
+
+}
+
+
+Matrix* backPropagate(Layer* layers, int numLayers, dataset* data)
+{
+
+    for(size_t ep=0; ep< EPOCH; ep++)
+    {
+        for(size_t i=0; i< SIZE_DATA; i++)
+        {
+            for(size_t l=numLayers-1; l>=0; l--)
+            {
+               // layers[l]
+            }
+
+
+        }
+    }
+
 
 }

@@ -143,6 +143,11 @@ float sigmoid(float x)
     return (float) 1/(1+exp(-x));
 }
 
+float D_sigmoid(float x)
+{
+    return sigmoid(x)*(1-sigmoid(x));
+}
+
 Matrix* broadcastFunction(float (*function)(float), Matrix* A)
 {
     Matrix *new = allocateMatrix(A->row,A->col);
@@ -156,3 +161,20 @@ Matrix* broadcastFunction(float (*function)(float), Matrix* A)
     return new;
 }
 
+Matrix* hadamardProduct(const Matrix *A, const Matrix *B)
+{
+    
+    assert(A->col == B->col && A->row == B->row);
+    Matrix *prod;
+    prod = allocateMatrix(A->row, A->col);
+    
+    for(size_t i = 0; i< prod->row; i++)
+    {
+        for(size_t j=0; j< prod->col; j++)
+        {
+           
+            setElementAt(prod,i,j,getElementAt(A,i,j)*getElementAt(B,i,j));
+        }
+    }
+    return prod;
+}

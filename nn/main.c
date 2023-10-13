@@ -30,9 +30,11 @@ int main()
     printf("\n\n");
     
     printf("\n----------------\n");
+
+    // backPropagate(layers,2,data);
     // Matrix* C = allocateMatrix(3,3);
     // randomizeMatrix(C);
     
-   
+
     return 0;
 }
