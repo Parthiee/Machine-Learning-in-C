@@ -6,12 +6,13 @@
 
 
 #define SIZE_DATA 4 // data
-#define L1 3
+#define L1 6
 #define L2 1
 #define L3 1
 #define INPUT 2
 #define EPOCH 1000000
-#define LEARNING_RATE 0.001
+#define LEARNING_RATE 0.01
+#define NUM_LAYERS 2
 
 typedef float dataset[3];
 
@@ -23,6 +24,7 @@ typedef struct
     Matrix* W;
     Matrix* B;
     Matrix* Activations;
+
 
 }Layer;
 
@@ -116,89 +118,78 @@ float cost(Layer* layers, int numLayers, dataset* data)
 
 // }
 
-
 Matrix* backPropagate(Layer* layers, int numLayers, dataset* data) {
     for (size_t ep = 0; ep < EPOCH; ep++) {
-
         for (size_t i = 0; i < SIZE_DATA; i++) {
             // Forward propagation
+           // printf("\n%ld vaati ulla poiruchu\n", i);
             Matrix* outputs[numLayers];
             Matrix* current_input = allocateMatrix(INPUT, 1);
             setElementAt(current_input, 0, 0, data[i][0]);
             setElementAt(current_input, 1, 0, data[i][1]);
 
+            //printf("\n%ld computing activations\n", i);
             outputs[0] = matrixMultiply(layers[0].W, current_input);
+            
             outputs[0] = addMatrix(outputs[0], layers[0].B);
-            outputs[0] = broadcastFunction(sigmoid, outputs[0]);
+  
+            outputs[0] = broadcastFunction(sigmoid, outputs[0]);\
+
             copyMatrix(layers[0].Activations, outputs[0]);
 
             for (size_t l = 1; l < numLayers; l++) {
+            
                 outputs[l] = matrixMultiply(layers[l].W, outputs[l - 1]);
+         
                 outputs[l] = addMatrix(outputs[l], layers[l].B);
                 outputs[l] = broadcastFunction(sigmoid, outputs[l]);
                 copyMatrix(layers[l].Activations, outputs[l]);
             }
 
             // Calculate the error at the output layer
+        
             float y_hat = getElementAt(outputs[numLayers - 1], 0, 0);
             float y = data[i][2];
-            float output_error = y_hat - y;
+            float output_error = y - y_hat;
 
-            // Backpropagation
+            // Backpropagation for the last layer (numLayers - 1)
             Matrix* delta = allocateMatrix(1, 1);
             setElementAt(delta, 0, 0, output_error);
 
-            for (size_t l = numLayers - 1; l > 0; l--) {
-                // Calculate delta weights and delta biases
-                if(l == 0)
-                { 
-                
-                Matrix* delta_weights = matrixMultiply(delta, transposeMatrix(current_input));
-                Matrix* delta_bias = delta;
-
-                // Update weights and biases for the current layer
-                layers[l].W = subtractMatrix(layers[l].W, scaleMatrix(delta_weights, LEARNING_RATE));
-                layers[l].B = subtractMatrix(layers[l].B, scaleMatrix(delta_bias, LEARNING_RATE));
-
-                // Calculate the delta for the next layer
-                delta = matrixMultiply(transposeMatrix(layers[l].W), delta);
-                delta = hadamardProduct(delta, broadcastFunction(D_sigmoid, current_input));
+            // Update weights and biases for the output layer (numLayers - 1)
+            Matrix* dw = matrixMultiply(delta, transposeMatrix(outputs[numLayers - 2]));
             
-                }
-                else{
-                Matrix* delta_weights = matrixMultiply(delta, transposeMatrix(outputs[l - 1]));
-                Matrix* delta_bias = delta;
+            layers[numLayers - 1].W = addMatrix(layers[numLayers - 1].W, scaleMatrix(dw, LEARNING_RATE));
+            layers[numLayers - 1].B = addMatrix(layers[numLayers - 1].B, scaleMatrix(delta, LEARNING_RATE));
+            
+            // Backpropagation for the first layer (0)
+            delta = matrixMultiply(transposeMatrix(layers[numLayers - 1].W), delta);
+            delta = hadamardProduct(delta, broadcastFunction(D_sigmoid, outputs[numLayers - 2]));
 
-                // Update weights and biases for the current layer
-                layers[l].W = subtractMatrix(layers[l].W, scaleMatrix(delta_weights, LEARNING_RATE));
-                layers[l].B = subtractMatrix(layers[l].B, scaleMatrix(delta_bias, LEARNING_RATE));
+            // Update weights and biases for the first layer (0)
+            dw = matrixMultiply(delta, transposeMatrix(current_input));
 
-                // Calculate the delta for the next layer
-                delta = matrixMultiply(transposeMatrix(layers[l].W), delta);
-                delta = hadamardProduct(delta, broadcastFunction(D_sigmoid, outputs[l - 1]));
-                }
-            }
-        }
-
+            Matrix* scales = scaleMatrix(dw, LEARNING_RATE);
+            layers[0].W = addMatrix(layers[0].W, scales );
+            scales = scaleMatrix(delta, LEARNING_RATE);
+            layers[0].B = addMatrix(layers[0].B, scales);
+           
+        }   
+        printf("\nCost : %f", cost(layers, numLayers, data));
         printf("\n--Layer 0--\n");
         printMatrix(layers[0].W);
         printf("\n");
         printMatrix(layers[0].B);
 
-
         printf("\n--Layer 1--\n");
         printMatrix(layers[1].W);
         printf("\n");
         printMatrix(layers[1].B);
-        
-
-        // printf("\n--Layer 2--");
-        // printMatrix(layers[2].W);
-        // printf("\n");
-        // printMatrix(layers[2].B);
-        // printf("\n");
     }
 
     return NULL; // You can return something meaningful, or void, based on your needs
 }
+
+
+
 

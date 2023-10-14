@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "nn.h"
 
-#define NUM_LAYERS 2
+
 
 dataset or_train[] = {
     {0,0,0},
     {0,1,1},
     {1,0,1},
-    {1,1,1}
+    {1,1,0}
 
 };
 
@@ -25,9 +25,8 @@ int main()
 
 
 
-    //backPropagate(layers,NUM_LAYERS,data);
+    backPropagate(layers,NUM_LAYERS,data);
 
-calculateNumericalGradients(layers,NUM_LAYERS,data, LEARNING_RATE);
 
      printf("\nCost is %f \n",cost(layers,NUM_LAYERS,data));
 
