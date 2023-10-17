@@ -4,13 +4,12 @@
 
 
 dataset or_train[] = {
-    {0,0,0},
+    {0,0,1},
     {0,1,1},
     {1,0,1},
     {1,1,0}
 
 };
-
 dataset *data = or_train;
 
 int main()

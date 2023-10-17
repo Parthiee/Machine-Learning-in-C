@@ -4,9 +4,14 @@
 #include <assert.h>
 #include "matrix.h"
 
+/*
+    AND, NAND works for very large num of neurons
+
+*/
+
 
 #define SIZE_DATA 4 // data
-#define L1 6
+#define L1 70// 100 neurons, works
 #define L2 1
 #define L3 1
 #define INPUT 2
@@ -120,6 +125,10 @@ float cost(Layer* layers, int numLayers, dataset* data)
 
 Matrix* backPropagate(Layer* layers, int numLayers, dataset* data) {
     for (size_t ep = 0; ep < EPOCH; ep++) {
+        if(cost(layers, numLayers, data) < 0.00001)
+         {
+            break;
+         }
         for (size_t i = 0; i < SIZE_DATA; i++) {
             // Forward propagation
            // printf("\n%ld vaati ulla poiruchu\n", i);
@@ -176,15 +185,15 @@ Matrix* backPropagate(Layer* layers, int numLayers, dataset* data) {
            
         }   
         printf("\nCost : %f", cost(layers, numLayers, data));
-        printf("\n--Layer 0--\n");
-        printMatrix(layers[0].W);
-        printf("\n");
-        printMatrix(layers[0].B);
+        // printf("\n--Layer 0--\n");
+        // printMatrix(layers[0].W);
+        // printf("\n");
+        // printMatrix(layers[0].B);
 
-        printf("\n--Layer 1--\n");
-        printMatrix(layers[1].W);
-        printf("\n");
-        printMatrix(layers[1].B);
+        // printf("\n--Layer 1--\n");
+        // printMatrix(layers[1].W);
+        // printf("\n");
+        // printMatrix(layers[1].B);
     }
 
     return NULL; // You can return something meaningful, or void, based on your needs
