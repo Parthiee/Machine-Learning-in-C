@@ -19,6 +19,16 @@ double data[][2] ={
 #define traincount 10000
 #define size sizeof(data)/sizeof(data[0])
 
+
+double relu(double x) {
+    if (x > 0) {
+        return x;
+    } else {
+        return 0.0;
+    }
+}
+
+
 double getRandomf()
 {
   srand(time(0));
@@ -33,7 +43,7 @@ double getMeanSquaredError(double weight, double bias)
 
   for(int i=0; i<size; i++)
   {
-    double y_hat = weight*data[i][0]  + bias;
+    double y_hat = relu( weight*data[i][0]  + bias);
     double y = data[i][1];
     cumError += (y - y_hat)*(y - y_hat);
 

@@ -4,6 +4,13 @@
 #include <assert.h>
 #include <math.h>
 
+#ifndef MATRIX_H
+#define MATRIX_H
+
+
+
+
+
 
 typedef struct 
 {
@@ -16,7 +23,7 @@ typedef struct
 
 Matrix* allocateMatrix(const size_t row, const size_t col)
 {
-    srand(time(NULL));
+    //srand(time(NULL));
     Matrix* matrix = (Matrix*) malloc(sizeof(Matrix));
     matrix->row = row;
     matrix->col = col;
@@ -42,10 +49,10 @@ void setElementAt(Matrix *matrix, int row, int col, float value)
 void printMatrix(const Matrix *matrix)
 {
 
-    for(int i = 0 ; i<matrix->row ; i++)
+    for(size_t i = 0 ; i<matrix->row ; i++)
     {
         printf("[");
-        for(int j=0; j<matrix->col; j++ )
+        for(size_t j=0; j<matrix->col; j++ )
         {
             printf("%f ",getElementAt(matrix,i,j));
         }
@@ -160,7 +167,7 @@ float sigmoid(float x)
     return (float) 1/(1+exp(-x));
 }
 
-float D_sigmoid(float x)
+float sigmoid_derivative(float x)
 {
     return sigmoid(x)*(1-sigmoid(x));
 }
@@ -238,3 +245,17 @@ float relu_derivative(float x) {
         return 0.0;
     }
 }
+
+
+float linear(float x)
+{
+    return x;
+}
+
+float linear_derivative(float x)
+{
+    return (float) 1 ;
+}
+
+
+#endif
