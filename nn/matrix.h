@@ -16,7 +16,6 @@ typedef struct
 {
     size_t row;
     size_t col;
-    size_t stride; // co
     float* mat;
 }Matrix;
 
@@ -27,8 +26,6 @@ Matrix* allocateMatrix(const size_t row, const size_t col)
     Matrix* matrix = (Matrix*) malloc(sizeof(Matrix));
     matrix->row = row;
     matrix->col = col;
-
-    matrix->stride = matrix->col;
     matrix->mat = (float*) malloc(sizeof(float)*col*row);
 
     return matrix;
@@ -257,5 +254,10 @@ float linear_derivative(float x)
     return (float) 1 ;
 }
 
+void killMatrix(Matrix *A)
+{
+
+    free(A);
+}
 
 #endif

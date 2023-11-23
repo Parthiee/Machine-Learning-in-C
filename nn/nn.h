@@ -3,29 +3,12 @@
 #include <time.h>
 #include <assert.h>
 #include "matrix.h"
+#include "glob.h"
 
 #ifndef NN_H
 #define NN_H
 
-/*
-    AND, NAND works for very large num of neurons
-
-*/
-#define PRED_COLUMN 1
-
-#define SIZE_DATA 96  // data
-
-#define L1 1//  INPUT LAYER
-#define L2 100// Hidden Layer 1
-#define L3 1//  Hidden Layer 2
-#define L4 10
-#define L5 1 // OUTPUT LAYER
-#define INPUT 1
-#define EPOCH 100000
-#define LEARNING_RATE 0.00001
-#define NUM_LAYERS 3
-
-typedef float dataset[2];
+typedef float dataset[NUM_COLS];
 
 
 typedef struct 
@@ -56,13 +39,15 @@ Layer createLayer(int numInputs,int numNodes)
 }
 
 
-Matrix* forwardPropagate(Layer* layers, int numLayers, dataset ip, float (*activation)(float))
+Matrix* forwardPropagate(Layer* layers, int numLayers, dataset ip, float (*activation)(float), int numInputs)
 {
-    Matrix* input = allocateMatrix(INPUT,1);
+    Matrix* input = allocateMatrix(numInputs,1);
     Matrix* output;
 
-   
-       setElementAt(input,0,0, ip[0]);
+        for(int i=0; i<numInputs; i++)
+        {
+        setElementAt(input,i,0, ip[i]);
+        }
        //setElementAt(input,1,0, ip[1]); // Manually change this
 
        // Y = W*x
@@ -80,12 +65,12 @@ Matrix* forwardPropagate(Layer* layers, int numLayers, dataset ip, float (*activ
     
 }
 
-float cost(Layer* layers, int numLayers, dataset* data, float (*activation)(float))
+float cost(Layer* layers, int numLayers, dataset* data, float (*activation)(float), int numInput)
 {
     float cumError=0;
     for(int i=0; i<SIZE_DATA; i++)
     {
-        Matrix* output = forwardPropagate(layers,numLayers,data[i], activation);
+        Matrix* output = forwardPropagate(layers,numLayers,data[i], activation, numInput);
         float y_hat = getElementAt(output,0,0);
         float y = data[i][PRED_COLUMN];
         cumError += (y - y_hat)*(y - y_hat);
@@ -98,15 +83,15 @@ float cost(Layer* layers, int numLayers, dataset* data, float (*activation)(floa
 }
 
 
-Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float)) {
+Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float), int numInput) {
     for (int ep = 0; ep < EPOCH; ep++) {
-        if (cost(layers, numLayers, data,activation) < 11.55) {
+        if (cost(layers, numLayers, data,activation, numInput) < 11.55) {
             break;
         }
-        for (int i = 0; i < SIZE_DATA; i++) {
+        for (int i = 0; i < SIZE_DATA; i++) { 
             // Forward propagation
             Matrix* outputs[numLayers];
-            Matrix* current_input = allocateMatrix(INPUT, 1);
+            Matrix* current_input = allocateMatrix(numInput, 1);
             setElementAt(current_input, 0, 0, data[i][0]);
             //setElementAt(current_input, 1, 0, data[i][1]);
 
@@ -194,7 +179,7 @@ Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activ
 }
 
 
-void calculateRSquare(Layer *layers, dataset* data, float (*activation)(float))
+void calculateRSquare(Layer *layers, dataset* data, float (*activation)(float), int numInputs, int numLayers)
 {
     
 
@@ -212,7 +197,7 @@ void calculateRSquare(Layer *layers, dataset* data, float (*activation)(float))
 
     for(size_t i=0; i< SIZE_DATA; i++)
     {
-        float y_hat = getElementAt(forwardPropagate(layers,NUM_LAYERS, data[i],activation),0,0);\
+        float y_hat = getElementAt(forwardPropagate(layers,numLayers, data[i],activation,numInputs),0,0);\
         float y = data[i][1];
 
         printf("\n%f %f\n",y_hat, data[i][PRED_COLUMN]);
@@ -225,6 +210,19 @@ void calculateRSquare(Layer *layers, dataset* data, float (*activation)(float))
     printf("\nR^2 SCORE : %f\n",r2);
 
 
+}
+
+void freeMemory(Layer* layers, int numLayers)
+{
+
+    for(int i=0; i<numLayers;i++)
+    {
+        killMatrix(layers[i].Activations);
+        killMatrix(layers[i].B);
+        killMatrix(layers[i].W);
+    }
+
+    free(layers);
 }
 
 #endif
