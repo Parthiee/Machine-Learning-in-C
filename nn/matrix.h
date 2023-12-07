@@ -251,7 +251,8 @@ float linear(float x)
 
 float linear_derivative(float x)
 {
-    return (float) 1 ;
+    x = 1; // Dummy variable
+    return (float) x ;
 }
 
 void killMatrix(Matrix *A)

@@ -10,19 +10,19 @@ char *filename;
 int numInputs;
 int numHidden;
 int *hiddenLayer;
+char *activation;
+
+float (*function)(float x);
+float (*function_derivative)(float x);
 
 int main(int argc, char** argv)
 {
 
 
-    /*
-        ./main <filename> <input cols> <no.of hidden layers> <no of nodes in hidden layers>
-                            INPUT       
-    */
 
    if (argc < 4)
    {
-        printf(" \n./main <filename> <input cols> <no.of hidden layers> <no of nodes in hidden layers> \n");
+        printf(" \n./main <filename> <input cols> <linear/sigmoid/relu> <no.of hidden layers> <no of nodes in hidden layers> \n");
         exit(1);
 
    }
@@ -30,13 +30,15 @@ int main(int argc, char** argv)
    else
     {
         filename =(char*) malloc(FILENAME_MAX);
+        activation =(char*) malloc(FILENAME_MAX);
+
         strcpy(filename,argv[1]);
         numInputs = atoi(argv[2]);
-        numHidden = atoi(argv[3]);
-    
+        numHidden = atoi(argv[4]);
+        strcpy(activation,argv[3]);
 
         hiddenLayer = (int*) malloc(sizeof(int)*numHidden);
-        for(size_t i=4,j=0; (i< argc) && (j <argc); i++,j++)
+        for(int i=5,j=0; (i< argc) && (j <argc); i++,j++)
         {
             hiddenLayer[j] = atoi(argv[i]);
 
@@ -45,9 +47,29 @@ int main(int argc, char** argv)
         printf("\nFilename : %s ",filename);
         printf("\numInputs : %d ",numInputs);
         printf("\numHidden : %d ",numHidden);
-        for(size_t j=0; j <numHidden; j++)
+        for(int j=0; j <numHidden; j++)
         {
-            printf("\nHidden Layer %lu : %d",j,hiddenLayer[j]);
+            printf("\nHidden Layer %d : %d",j,hiddenLayer[j]);
+
+        }
+
+        if(!strcmp(activation,"relu"))
+        {
+            function = relu;
+            function_derivative = relu_derivative;
+        }
+
+        else if(!strcmp(activation,"sigmoid"))
+        {
+            function = sigmoid;
+            function_derivative = sigmoid_derivative;
+
+        }
+
+        else if(!strcmp(activation,"linear"))
+        {
+            function = linear;
+            function_derivative = linear_derivative;
 
         }
     }
@@ -91,10 +113,10 @@ int main(int argc, char** argv)
     }
 
     
-    printf("\nCost is %f \n",cost(layers,numHidden+2,data,linear,numInputs));
-    backPropagate(layers,numHidden+2,data,linear, linear_derivative, numInputs);
-    calculateRSquare(layers,data, linear,numInputs,numHidden+2);
-    printf("\nFinal Cost is %f \n",cost(layers,numHidden+2,data,linear,numInputs));
+    printf("\nCost is %f \n",cost(layers,numHidden+2,data,function,numInputs));
+    backPropagate(layers,numHidden+2,data,function, function_derivative, numInputs, numHidden);
+    calculateRSquare(layers,data, function,numInputs,numHidden+2);
+    printf("\nFinal Cost is %f \n",cost(layers,numHidden+2,data,function,numInputs));
     
     freeMemory(layers,numHidden+2);
     return 0;

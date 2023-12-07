@@ -93,7 +93,7 @@ float cost(Layer* layers, int numLayers, dataset* data, float (*activation)(floa
  * @param numInput Number of input features.
  * @return NULL (or a meaningful result based on your requirements).
  */
-Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float), int numInput);
+Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float), int numInput, int numHidden);
 
 /**
  * @brief Calculates the R-squared score of the neural network predictions.
@@ -105,6 +105,7 @@ Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activ
  * @param activation Activation function for the layers.
  * @param numInputs Number of input features.
  * @param numLayers Number of layers in the neural network.
+ * @param numHidden Number of hidden layers in  the neural network.
  */
 void calculateRSquare(Layer *layers, dataset* data, float (*activation)(float), int numInputs, int numLayers);
 

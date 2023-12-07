@@ -83,7 +83,7 @@ float cost(Layer* layers, int numLayers, dataset* data, float (*activation)(floa
 }
 
 
-Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float), int numInput) {
+Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activation)(float), float (*D_activation)(float), int numInput, int numHidden) {
     for (int ep = 0; ep < EPOCH; ep++) {
         if (cost(layers, numLayers, data,activation, numInput) < 11.55) {
             break;
@@ -165,7 +165,7 @@ Matrix* backPropagate(Layer* layers, int numLayers, dataset* data, float (*activ
         }
         }
 
-        //printf("\nEpoch %d - Cost: %f\n", ep, cost(layers, NUM_LAYERS, data,activation));
+        printf("\nEpoch %d - Cost: %f\n", ep, cost(layers,numHidden+2,data,activation,numInput));
         // for (int l = 0; l < numLayers; l++) {
         //     printf("\n--Layer %d--\n", l);
         //     printf("Weights:\n");
