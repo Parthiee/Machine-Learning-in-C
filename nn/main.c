@@ -45,8 +45,8 @@ int main(int argc, char** argv)
         }
 
         printf("\nFilename : %s ",filename);
-        printf("\numInputs : %d ",numInputs);
-        printf("\numHidden : %d ",numHidden);
+        printf("\nNumInputs : %d ",numInputs);
+        printf("\nNumHidden : %d ",numHidden);
         for(int j=0; j <numHidden; j++)
         {
             printf("\nHidden Layer %d : %d",j,hiddenLayer[j]);
@@ -72,6 +72,9 @@ int main(int argc, char** argv)
             function_derivative = linear_derivative;
 
         }
+
+  
+    
     }
 
     
@@ -112,7 +115,14 @@ int main(int argc, char** argv)
  
     }
 
-    
+     for (int l = 0; l < (numHidden +2); l++) {
+            printf("\n--Layer %d--\n", l);
+            printf("Weights:\n");
+            printMatrix(layers[l].W);
+            printf("Biases:\n");
+            printMatrix(layers[l].B);
+        }
+
     printf("\nCost is %f \n",cost(layers,numHidden+2,data,function,numInputs));
     backPropagate(layers,numHidden+2,data,function, function_derivative, numInputs, numHidden);
     calculateRSquare(layers,data, function,numInputs,numHidden+2);

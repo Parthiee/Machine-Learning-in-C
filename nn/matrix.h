@@ -59,6 +59,7 @@ void printMatrix(const Matrix *matrix)
 
 void randomizeMatrix(Matrix *matrix)
 {
+    srand(time(NULL)); 
     
     for(size_t i=0; i<matrix->row; i++)
     {
@@ -228,7 +229,7 @@ Matrix* scaleMatrix(const Matrix* A, float scalar) {
 }
 
 float relu(float x) {
-    if (x > 0) {
+    if (x >= 0) {
         return x;
     } else {
         return 0.0;
@@ -236,7 +237,7 @@ float relu(float x) {
 }
 
 float relu_derivative(float x) {
-    if (x > 0) {
+    if (x >= 0) {
         return 1.0;
     } else {
         return 0.0;
@@ -251,7 +252,7 @@ float linear(float x)
 
 float linear_derivative(float x)
 {
-    x = 1; // Dummy variable
+    x = 1.0; // Dummy variable
     return (float) x ;
 }
 
